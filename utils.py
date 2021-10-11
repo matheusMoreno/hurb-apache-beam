@@ -25,7 +25,8 @@ def import_csv_rows(filepath: str, datatype: Any = dict) -> Iterator[Any]:
     """Generate data from a CSV file.
 
     For simplicity, the function considers that the CSV file has minimal
-    quoting and ';' as the delimiter.
+    quoting and ';' as the delimiter. Also, non-alpha caracters are removed
+    from the columns' names.
 
     Parameters
     ----------

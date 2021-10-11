@@ -7,19 +7,10 @@ Hurb Data Engineer Challenge
 Author: Matheus Fernandes Moreno
 """
 
-# Ideias de pipeline:
-#   - Importar o arquivo de Casos
-#   - Usar um Filter() no csv Casos para remover sem estado e com município
-#     (sobrando assim apenas dados gerais dos estados)
-#   - Agregar o casosAcumulado e obitosAcumulado por coduf em Casos
-#   - Recuperar as informações do estado a partir do coduf de Casos
-#   - Excluir e renomear colunas para gerar
-#   - Gerar o CSV
-#   - Gerar o json a partir do CSV (muito fácil)
-
 import json
+import argparse
 import logging
-from typing import Iterable, NamedTuple, Dict, TypedDict
+from typing import Iterable, NamedTuple, Dict, Tuple, TypedDict
 from collections import OrderedDict
 
 import apache_beam as beam
@@ -30,9 +21,6 @@ from utils import import_states_data_by_key, import_csv_rows
 
 LOGGER = logging.getLogger(__name__)
 
-INPUT_FILEPATH = 'data/HIST_PAINEL_COVIDBR_28set2020.csv'
-OUTPUTS_FILEPATH_PREFIX = 'outputs/states_data'
-
 OUTPUTS_INPUT_FIELD_MAPPINGS = OrderedDict({
     'Regiao': 'regiao',
     'Estado': 'UF',
@@ -42,8 +30,29 @@ OUTPUTS_INPUT_FIELD_MAPPINGS = OrderedDict({
     'TotalObitos': 'TotalObitos',
 })
 
-STATES_DATA_FILEPATH = 'data/EstadosIBGE.csv'
-STATES_DATA_BY_CODE = import_states_data_by_key(STATES_DATA_FILEPATH, 'Código')
+
+def retrieve_args() -> Tuple[argparse.Namespace, list]:
+    """Parse args used by the script and by Apache Beam."""
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        '-i', '--input_file',
+        default='data/HIST_PAINEL_COVIDBR_28set2020.csv',
+        help='Filepath of the input CSV.'
+    )
+    parser.add_argument(
+        '-o', '--outputs_prefix',
+        default='outputs/states_data',
+        help='Prefix of the output files.'
+    )
+    parser.add_argument(
+        '-s', '--states_file',
+        default='data/EstadosIBGE.csv',
+        help='Filepath with metadata for the brazilian states.'
+    )
+
+    main_args, beam_options = parser.parse_known_args()
+    LOGGER.debug("Found local arguments: %s.", vars(main_args))
+    return main_args, beam_options
 
 
 def check_if_state_data(row: TypedDict) -> bool:
@@ -51,9 +60,10 @@ def check_if_state_data(row: TypedDict) -> bool:
     return row.estado and not row.municipio
 
 
-def extend_state_data_by_code(data: NamedTuple) -> Dict:
+def extend_state_data_by_code(data: NamedTuple, states_data=None) -> Dict:
     """Add metadata for state based on its code."""
-    return {**data._asdict(), **STATES_DATA_BY_CODE[data.coduf]}
+    states_data = {} if states_data is None else states_data
+    return {**data._asdict(), **states_data.get(data.coduf, {})}
 
 
 def filter_and_rename_fields(data: Dict) -> OrderedDict:
@@ -71,6 +81,7 @@ def format_output_csv(rows: Iterable[OrderedDict]) -> str:
     the function must consider the possibility that some elements of `rows`
     are already formatted, i.e., are strings.
     """
+    LOGGER.debug("Formatting rows: %s", list(rows))
     return '\n'.join(
         row if isinstance(row, str) else
         ';'.join(str(e) for e in row.values())
@@ -85,6 +96,7 @@ def format_output_json(rows: Iterable[OrderedDict]) -> str:
     the function must consider the possibility that some elements of `rows`
     are already formatted, i.e., are strings.
     """
+    LOGGER.debug("Formatting rows: %s", list(rows))
     dict_rows = [
         elem for row in rows
         for elem in (json.loads(row) if isinstance(row, str) else [row])
@@ -94,29 +106,38 @@ def format_output_json(rows: Iterable[OrderedDict]) -> str:
 
 def main():
     """Execute the pipeline."""
-    options = PipelineOptions(flags=[], type_check_additional='all')
-    input_filepath = INPUT_FILEPATH
-    rows = import_csv_rows(input_filepath, datatype=beam.Row)
+    main_args, beam_options = retrieve_args()
+    options = PipelineOptions(beam_options, type_check_additional='all')
+
+    # Instantiate iterable with rows and states data
+    csv_rows = import_csv_rows(main_args.input_file, datatype=beam.Row)
+    states_data = import_states_data_by_key(main_args.states_file, 'Código')
+
+    LOGGER.info(
+        "Starting the Beam pipeline with options:\n%s",
+        '\n'.join(f"\t{k}=={v}" for k, v in vars(main_args).items())
+    )
 
     with beam.Pipeline(options=options) as pipeline:
         # Main processing pipeline: compute and format data
         processed_data = (
             pipeline
-            | 'Create collection from CSV file' >> beam.Create(rows)
+            | 'Create collection from CSV file' >> beam.Create(csv_rows)
             | 'Keep only data from states' >> beam.Filter(check_if_state_data)
             | 'Aggregate values' >> beam.GroupBy('coduf', 'regiao', 'estado')
                 .aggregate_field('casosNovos', sum, 'TotalCasos')       # noqa
                 .aggregate_field('obitosNovos', sum, 'TotalObitos')
-            | 'Add states metadata' >> beam.Map(extend_state_data_by_code)
+            | 'Add states metadata' >> beam.Map(
+                extend_state_data_by_code, states_data=states_data)
             | 'Filter and rename fields' >> beam.Map(filter_and_rename_fields)
         )
 
         # First output pipeline: write the .csv file
         _ = (
             processed_data
-            | 'Format CSV output' >> beam.CombineGlobally(format_output_csv)
-            | 'Write to CSV file' >> beam.io.WriteToText(
-                OUTPUTS_FILEPATH_PREFIX,
+            | 'Format CSV string' >> beam.CombineGlobally(format_output_csv)
+            | 'Write to CSV output file' >> beam.io.WriteToText(
+                main_args.outputs_prefix,
                 file_name_suffix='.csv',
                 shard_name_template='',
                 header=';'.join(OUTPUTS_INPUT_FIELD_MAPPINGS.keys())
@@ -126,16 +147,24 @@ def main():
         # Second output pipeline: write the .json file
         _ = (
             processed_data
-            | 'Format JSON output' >> beam.CombineGlobally(format_output_json)
-            | 'Write to JSON file' >> beam.io.WriteToText(
-                OUTPUTS_FILEPATH_PREFIX,
+            | 'Format JSON string' >> beam.CombineGlobally(format_output_json)
+            | 'Write to JSON output file' >> beam.io.WriteToText(
+                main_args.outputs_prefix,
                 file_name_suffix='.json',
                 shard_name_template=''
             )
         )
 
+    LOGGER.info("Done. Outputs in %s*.", main_args.outputs_prefix)
+
 
 if __name__ == '__main__':
-    # TODO: log stuff
+    # Set logging levels. The level of apache_beam.coders is raised to suppress
+    # a warning regarding the use of an implied deterministic coder. For this
+    # simple implementation, we can just ignore it. For more information, see
+    # https://stackoverflow.com/questions/63219092/
     LOGGER.setLevel(logging.INFO)
+    logging.getLogger('apache_beam.coders').setLevel(logging.ERROR)
+
+    # Run the main function
     main()
