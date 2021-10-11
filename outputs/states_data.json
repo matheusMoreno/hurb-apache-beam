@@ -1,0 +1,218 @@
+[
+    {
+        "Regiao": "Norte",
+        "Estado": "Rondônia",
+        "UF": "RO",
+        "Governador": "MARCOS JOSE ROCHA DOS SANTOS",
+        "TotalCasos": 65386,
+        "TotalObitos": 1340
+    },
+    {
+        "Regiao": "Norte",
+        "Estado": "Acre",
+        "UF": "AC",
+        "Governador": "GLADSON DE LIMA CAMELI",
+        "TotalCasos": 27885,
+        "TotalObitos": 657
+    },
+    {
+        "Regiao": "Norte",
+        "Estado": "Amazonas",
+        "UF": "AM",
+        "Governador": "WILSON MIRANDA LIMA",
+        "TotalCasos": 136708,
+        "TotalObitos": 4031
+    },
+    {
+        "Regiao": "Norte",
+        "Estado": "Roraima",
+        "UF": "RR",
+        "Governador": "ANTONIO OLIVERIO GARCIA DE ALMEIDA",
+        "TotalCasos": 50940,
+        "TotalObitos": 642
+    },
+    {
+        "Regiao": "Norte",
+        "Estado": "Pará",
+        "UF": "PA",
+        "Governador": "HELDER ZAHLUTH BARBALHO",
+        "TotalCasos": 228068,
+        "TotalObitos": 6551
+    },
+    {
+        "Regiao": "Norte",
+        "Estado": "Amapá",
+        "UF": "AP",
+        "Governador": "ANTONIO WALDEZ GÓES DA SILVA",
+        "TotalCasos": 47935,
+        "TotalObitos": 704
+    },
+    {
+        "Regiao": "Norte",
+        "Estado": "Tocantins",
+        "UF": "TO",
+        "Governador": "MAURO CARLESSE",
+        "TotalCasos": 66865,
+        "TotalObitos": 922
+    },
+    {
+        "Regiao": "Nordeste",
+        "Estado": "Maranhão",
+        "UF": "MA",
+        "Governador": "FLÁVIO DINO DE CASTRO E COSTA",
+        "TotalCasos": 172176,
+        "TotalObitos": 3735
+    },
+    {
+        "Regiao": "Nordeste",
+        "Estado": "Piauí",
+        "UF": "PI",
+        "Governador": "JOSÉ WELLINGTON BARROSO DE ARAÚJO DIAS",
+        "TotalCasos": 94733,
+        "TotalObitos": 2101
+    },
+    {
+        "Regiao": "Nordeste",
+        "Estado": "Ceará",
+        "UF": "CE",
+        "Governador": "CAMILO SOBREIRA DE SANTANA",
+        "TotalCasos": 241167,
+        "TotalObitos": 8921
+    },
+    {
+        "Regiao": "Nordeste",
+        "Estado": "Rio Grande do Norte",
+        "UF": "RN",
+        "Governador": "MARIA DE FATIMA BEZERRA",
+        "TotalCasos": 68765,
+        "TotalObitos": 2377
+    },
+    {
+        "Regiao": "Nordeste",
+        "Estado": "Paraíba",
+        "UF": "PB",
+        "Governador": "JOÃO AZEVEDO LINS FILHO",
+        "TotalCasos": 119987,
+        "TotalObitos": 2804
+    },
+    {
+        "Regiao": "Nordeste",
+        "Estado": "Pernambuco",
+        "UF": "PE",
+        "Governador": "PAULO HENRIQUE SARAIVA CÂMARA",
+        "TotalCasos": 145096,
+        "TotalObitos": 8190
+    },
+    {
+        "Regiao": "Nordeste",
+        "Estado": "Alagoas",
+        "UF": "AL",
+        "Governador": "JOSE RENAN VASCONCELOS CALHEIROS FILHO",
+        "TotalCasos": 86401,
+        "TotalObitos": 2070
+    },
+    {
+        "Regiao": "Nordeste",
+        "Estado": "Sergipe",
+        "UF": "SE",
+        "Governador": "BELIVALDO CHAGAS SILVA",
+        "TotalCasos": 77172,
+        "TotalObitos": 2025
+    },
+    {
+        "Regiao": "Nordeste",
+        "Estado": "Bahia",
+        "UF": "BA",
+        "Governador": "RUI COSTA DOS SANTOS",
+        "TotalCasos": 311247,
+        "TotalObitos": 6697
+    },
+    {
+        "Regiao": "Sudeste",
+        "Estado": "Minas Gerais",
+        "UF": "MG",
+        "Governador": "ROMEU ZEMA NETO",
+        "TotalCasos": 292105,
+        "TotalObitos": 7298
+    },
+    {
+        "Regiao": "Sudeste",
+        "Estado": "Espírito Santo",
+        "UF": "ES",
+        "Governador": "JOSE RENATO CASAGRANDE",
+        "TotalCasos": 130966,
+        "TotalObitos": 3548
+    },
+    {
+        "Regiao": "Sudeste",
+        "Estado": "Rio de Janeiro",
+        "UF": "RJ",
+        "Governador": "WILSON JOSÉ WITZEL",
+        "TotalCasos": 262006,
+        "TotalObitos": 18291
+    },
+    {
+        "Regiao": "Sudeste",
+        "Estado": "São Paulo",
+        "UF": "SP",
+        "Governador": "JOÃO AGRIPINO DA COSTA DORIA JUNIOR",
+        "TotalCasos": 973315,
+        "TotalObitos": 35125
+    },
+    {
+        "Regiao": "Sul",
+        "Estado": "Paraná",
+        "UF": "PR",
+        "Governador": "CARLOS ROBERTO MASSA JUNIOR",
+        "TotalCasos": 177840,
+        "TotalObitos": 4421
+    },
+    {
+        "Regiao": "Sul",
+        "Estado": "Santa Catarina",
+        "UF": "SC",
+        "Governador": "CARLOS MOISÉS DA SILVA",
+        "TotalCasos": 220068,
+        "TotalObitos": 2765
+    },
+    {
+        "Regiao": "Sul",
+        "Estado": "Rio Grande do Sul",
+        "UF": "RS",
+        "Governador": "EDUARDO FIGUEIREDO CAVALHEIRO LEITE",
+        "TotalCasos": 185778,
+        "TotalObitos": 4648
+    },
+    {
+        "Regiao": "Centro-Oeste",
+        "Estado": "Mato Grosso do Sul",
+        "UF": "MS",
+        "Governador": "REINALDO AZAMBUJA SILVA",
+        "TotalCasos": 68325,
+        "TotalObitos": 1278
+    },
+    {
+        "Regiao": "Centro-Oeste",
+        "Estado": "Mato Grosso",
+        "UF": "MT",
+        "Governador": "MAURO MENDES FERREIRA",
+        "TotalCasos": 121145,
+        "TotalObitos": 3372
+    },
+    {
+        "Regiao": "Centro-Oeste",
+        "Estado": "Goiás",
+        "UF": "GO",
+        "Governador": "RONALDO RAMOS CAIADO",
+        "TotalCasos": 202754,
+        "TotalObitos": 4529
+    },
+    {
+        "Regiao": "Centro-Oeste",
+        "Estado": "Distrito Federal",
+        "UF": "DF",
+        "Governador": "IBANEIS ROCHA BARROS JUNIOR",
+        "TotalCasos": 190505,
+        "TotalObitos": 3203
+    }
+]
