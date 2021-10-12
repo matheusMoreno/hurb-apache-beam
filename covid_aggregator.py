@@ -10,7 +10,7 @@ Author: Matheus Fernandes Moreno
 import json
 import argparse
 import logging
-from typing import Iterable, NamedTuple, Dict, Tuple, TypedDict
+from typing import Iterable, NamedTuple, Dict, Tuple
 from collections import OrderedDict
 
 import apache_beam as beam
@@ -55,7 +55,7 @@ def retrieve_args() -> Tuple[argparse.Namespace, list]:
     return main_args, beam_options
 
 
-def check_if_state_data(row: TypedDict) -> bool:
+def check_if_state_data(row) -> bool:
     """Check if a row corresponds to data from a state."""
     return row.estado and not row.municipio
 
