@@ -1,0 +1,14 @@
+# Docker Compose file for running the service on a isolated environment
+#
+# Hurb Data Engineer Challenge
+# Author: Matheus Fernandes Moreno
+
+version: '3.7'
+
+services:
+  aggregator:
+    build: .
+    volumes:
+      - ./outputs:/app/outputs
+    # To pass arguments to the script, uncomment this line and set the args
+    # command: [-i INPUT_FILE] [-o OUTPUTS_PREFIX] [-s STATES_FILE]
