@@ -16,14 +16,15 @@ subproblemas e então paralelizados, gerando assim um pipeline de processamento.
 
 O fluxo foi projetado considerando simplicidade e robustez. Considerando que o CSV
 com informações sobre as unidades federativas não precisa de nenhum tipo de agregação
-ou filtragem, este foi importado separadamente; a única alteração feita aos dados
-desse arquivo foi a renomeação das colunas. Deste modo, a `PCollection` processada
-pelo Beam consiste das linhas do CSV com dados da pandemia.
+ou filtragem, este foi importado separadamente, como uma tabela adicional para incrementar
+os dados principais; a única alteração feita às informações desse arquivo foi a renomeação
+das colunas. Deste modo, a `PCollection` processada pelo Beam consiste das linhas do CSV
+com dados da pandemia.
 
 As etapas do fluxo principal são:
 
-1. A `PCollection` é gerada a partir de dicionários, sendo cada um deles associado a
-uma linha do arquivo ingerido;
+1. A `PCollection` é gerada a partir de um gerador de dicionários, sendo cada um deles
+associado a uma linha do arquivo ingerido;
 2. As linhas não relativas às unidades federativas são excluídas da coleção;
 3. Os dados são agrupados por código da unidade federativa, região e estado. Em
 seguida, são executadas duas agregações para calcular o total de casos e de óbitos.
@@ -34,7 +35,7 @@ agrupamento e o resultado da agregação;
 5. Os campos relevantes são filtrados e renomeados.
 
 A partir deste momento, o fluxo se divide em dois subfluxos: um responsável por
-gerar o arquivo CSV, e outro por gerar o arquivo JSON. O primeiro consiste em
+gerar o arquivo CSV, e outro por gerar o arquivo JSON. O primeiro consiste em:
 
 1. Formatar os dados em uma string, representando o arquivo CSV por completo.
 2. Escrevendo a string no arquivo de saída, com extensão `.csv`.
@@ -45,8 +46,9 @@ O subfluxo do JSON é análogo.
 
 O script pode ser executado em sua máquina local, ou num ambiente Docker. A
 primeira opção é recomendada, visto que o sistema demorou consideravelmente mais
-para rodar no ambiente dockerizado (5min x 45min); porém, a segunda opção é
-obviamente importante por causa da portabilidade.
+para rodar no ambiente dockerizado (5min na máquina local do autor, 45min no ambiente
+Docker, com 6 núcleos e 6GB de memória para o contâiner); porém, a segunda opção é
+obviamente importante por motivos de portabilidade.
 
 ### Localmente
 
