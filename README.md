@@ -10,7 +10,7 @@ O sistema foi implementado em Python e utiliza-se do Apache Beam. Esta ferrament
 é particularmente útil na resolução de problemas que podem ser divididos em
 subproblemas e então paralelizados, gerando assim um pipeline de processamento.
 
-(Aqui, falar um pouco mais porque usamos o Apache Beam.)
+(Aqui, falar um pouco mais por que usamos o Apache Beam.)
 
 ## O pipeline
 
