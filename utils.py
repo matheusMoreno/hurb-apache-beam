@@ -44,11 +44,14 @@ def import_csv_rows(filepath: str, datatype: Any = dict) -> Iterator[Any]:
         reader = csv.DictReader(
             filedesc, delimiter=';', quoting=csv.QUOTE_MINIMAL)
         for row in reader:
+            # Clear non-alpha characters
             row = {
-                ''.join(c for c in k if c.isalpha()): v
-                for k, v in row.items()
+                ''.join(c for c in k if c.isalpha()): v for k, v in row.items()
             }
+
+            # Convert ints from the dictionary
             row = convert_ints_from_dict(row)
+
             yield datatype(**dict(row))
 
 
